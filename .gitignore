@@ -1,0 +1,27 @@
+# API keys and environment variables
+.env
+.env.*
+!.env.example
+
+# Python cache
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Python virtual environments
+venv/
+.venv/
+env/
+
+# React dependencies and build files
+node_modules/
+frontend/dist/
+
+# Local databases and temporary files
+chroma_db/
+*.log
+
+# Editor and operating system files
+.vscode/
+.DS_Store
+Thumbs.db
