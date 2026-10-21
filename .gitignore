@@ -13,6 +13,9 @@ venv/
 .venv/
 env/
 
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
 # React dependencies and build files
 node_modules/
 frontend/dist/
