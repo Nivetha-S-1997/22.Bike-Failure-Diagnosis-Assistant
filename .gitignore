@@ -28,3 +28,6 @@ chroma_db/
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Scrap files
+scrap/
