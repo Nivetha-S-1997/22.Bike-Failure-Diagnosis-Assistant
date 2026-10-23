@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from google.api_core.exceptions import ResourceExhausted, GoogleAPICallError
+from google.genai.errors import APIError
 from pydantic import BaseModel
 from uuid import uuid4
 from chatbot import process_user_message
@@ -47,13 +47,13 @@ def chat(request: ChatRequest):
     except HTTPException:
         raise
 
-    except ResourceExhausted:
-        raise HTTPException(
-            status_code=429,
-            detail="The chatbot has reached its AI usage limit. Please try again later."
-        )
+    except APIError as e:
+        if e.code == 429:
+            raise HTTPException(
+                status_code=429,
+                detail="The chatbot has reached its AI usage limit. Please try again later."
+            )
 
-    except GoogleAPICallError:
         raise HTTPException(
             status_code=503,
             detail="The AI service is temporarily unavailable. Please try again later."
