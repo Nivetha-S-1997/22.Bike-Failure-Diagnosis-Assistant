@@ -24,18 +24,27 @@ for table in doc.tables: #Loops through each table
 
 documents=[Document(page_content=text) for text in (para_data + table_data)]
 
-embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+retriever = None
 
-#Retriever:
-db=Chroma.from_documents(documents,embeddings)
-retriever = db.as_retriever()
+def get_retriever():
+    global retriever
+
+    if retriever is None:
+        embeddings = HuggingFaceEmbeddings(
+            model_name="sentence-transformers/all-MiniLM-L6-v2"
+        )
+
+        db = Chroma.from_documents(documents, embeddings)
+        retriever = db.as_retriever()
+
+    return retriever
 
 chat_sessions={}
 
 #Main function:
 def process_user_message(user_text, session_id):
     chat_history = chat_sessions.setdefault(session_id, [])
-    docs = retriever.invoke(user_text)
+    docs = get_retriever().invoke(user_text)
     context = "\n".join([d.page_content for d in docs])
 
     history_text = "\n".join(

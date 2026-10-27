@@ -59,7 +59,8 @@ def chat(request: ChatRequest):
             detail="The AI service is temporarily unavailable. Please try again later."
         )
 
-    except Exception:
+    except Exception as e:
+        print(f"Chat error: {type(e).__name__}: {e}", flush=True)
         raise HTTPException(
             status_code=500,
             detail="An unexpected error occurred. Please try again later."
