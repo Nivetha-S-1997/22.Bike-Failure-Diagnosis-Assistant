@@ -3,7 +3,7 @@ from helper_func import chat_with_model
 
 from docx import Document as DocxDocument
 
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
 
@@ -23,6 +23,7 @@ for table in doc.tables: #Loops through each table
         table_data.append('|'.join(row_text)) #
 
 documents=[Document(page_content=text) for text in (para_data + table_data)]
+print(f"Total documents for embedding: {len(documents)}", flush=True)
 
 retriever = None
 
@@ -30,11 +31,26 @@ def get_retriever():
     global retriever
 
     if retriever is None:
-        embeddings = HuggingFaceEmbeddings(
-            model_name="sentence-transformers/all-MiniLM-L6-v2"
-        )
+        embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001", batch_size=20)
 
-        db = Chroma.from_documents(documents, embeddings)
+        db = Chroma(collection_name="bike_problems", embedding_function=embeddings, persist_directory="./chroma_db")
+
+        stored_count = db._collection.count()
+        expected_count = len(documents)
+
+        print(f"Stored documents: {stored_count}", flush=True)
+
+        if stored_count != expected_count:
+            raise RuntimeError(
+                f"ChromaDB contains {stored_count} documents; "
+                f"expected {expected_count}. "
+                "The saved vector database is missing or incomplete."
+            )
+
+        print("Using saved ChromaDB embeddings.", flush=True)
+        
+        print(f"Documents stored in ChromaDB: {db._collection.count()}", flush=True)
+
         retriever = db.as_retriever()
 
     return retriever

@@ -4,7 +4,6 @@ python-dotenv
 python-docx
 google-genai
 langchain-core
-langchain-huggingface
+langchain-google-genai
 langchain-chroma
 chromadb
-sentence-transformers
