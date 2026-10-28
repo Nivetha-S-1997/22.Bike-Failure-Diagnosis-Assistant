@@ -80,7 +80,7 @@ function App() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          user_text: userMessage,
+          message: userMessage,
           session_id: sessionId,
         }),
       });
