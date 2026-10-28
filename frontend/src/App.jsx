@@ -34,7 +34,7 @@ function App() {
   // 4. Start a new chat
   const startNewChat = async () => {
   try {
-    const response = await fetch("http://127.0.0.1:8000/new-chat", {
+    const response = await fetch("https://bike-failure-diagnosis-assistant.onrender.com/new-chat", {
       method: "POST",
     });
 
@@ -74,13 +74,13 @@ function App() {
     setLoading(true);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/chat", {
+      const response = await fetch("https://bike-failure-diagnosis-assistant.onrender.com/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          message: userMessage,
+          user_text: userMessage,
           session_id: sessionId,
         }),
       });
